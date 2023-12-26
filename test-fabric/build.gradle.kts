@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.architectury.loom)
-    alias(libs.plugins.shadow)
+}
+
+base {
+    archivesName = project(":test-common").base.archivesName
 }
 
 architectury {
@@ -9,53 +12,47 @@ architectury {
 }
 
 loom {
-    silentMojangMappingsLicense()
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 
-    accessWidenerPath.set(project(":common").loom.accessWidenerPath)
+    mods {
+        register("fabric") {
+            sourceSet("main", project(":fabric"))
+        }
+    }
 }
 
-val common by configurations.registering
-val shadowCommon by configurations.registering
-configurations.compileClasspath.get().extendsFrom(common.get())
-configurations["developmentFabric"].extendsFrom(common.get())
+val common: Configuration by configurations.dependencyScope("common")
 
-val minecraftVersion = libs.versions.minecraft.get()
+configurations {
+    compileClasspath { extendsFrom(common) }
+    runtimeClasspath { extendsFrom(common) }
+    "developmentFabric" { extendsFrom(common) }
+}
+
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven("https://maven.terraformersmc.com/releases") {
+                name = "TerraformersMC"
+            }
+        }
+        filter {
+            includeGroupByRegex("^com.terraformersmc(\\..+)?$")
+        }
+    }
+}
 
 dependencies {
-    minecraft(libs.minecraft)
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment(libs.parchment)
-    })
     modImplementation(libs.fabric.loader)
 
-    implementation(libs.twelvemonkeys.imageio.core)
-    implementation(libs.twelvemonkeys.imageio.webp)
-    implementation(libs.bundles.quilt.parsers)
+    setOf(libs.bundles.twelvemonkeys.imageio, libs.bundles.parsers).forEach {
+        implementation(it)
+    }
 
-    "common"(project(path = ":test-common", configuration = "namedElements")) { isTransitive = false }
+    common(project(path = ":common", configuration = "namedElements")) { isTransitive = false }
+    common(project(path = ":test-common", configuration = "namedElements")) { isTransitive = false }
     implementation(project(path = ":fabric", configuration = "namedElements"))
 
-    "common"(project(path = ":common", configuration = "namedElements")) { isTransitive = false }
-}
-
-tasks {
-    shadowJar {
-        exclude("architectury.common.json")
-
-        configurations = listOf(shadowCommon.get())
-        archiveClassifier.set("dev-shadow")
-    }
-
-    remapJar {
-        injectAccessWidener.set(true)
-        inputFile.set(shadowJar.get().archiveFile)
-        dependsOn(shadowJar)
-
-        archiveClassifier.set("fabric-$minecraftVersion")
-    }
-
-    jar {
-        archiveClassifier.set("dev")
-    }
+    modCompileOnly(libs.modmenu)
+    modLocalRuntime(libs.modmenu)
 }

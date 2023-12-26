@@ -1,0 +1,29 @@
+{
+  "tcl.control.boolean.true": "是",
+  "tcl.control.boolean.false": "否",
+
+  "tcl.control.action.execute": "执行",
+
+  "tcl.gui.save": "保存更改",
+  "tcl.gui.save.tooltip": "永久保存所做更改。",
+  "tcl.gui.finished.tooltip": "关闭 GUI。",
+  "tcl.gui.cancel.tooltip": "忽略犹豫不决的更改然后关闭 GUI。",
+  "tcl.gui.reset.tooltip": "将所有选项重置为默认值。（这是可逆的！）",
+  "tcl.gui.undo": "撤销",
+  "tcl.gui.undo.tooltip": "将所有选项恢复到编辑前的状态。",
+  "tcl.gui.fail_apply": "应用失败",
+  "tcl.gui.fail_apply.tooltip": "有一个错误以至于更改不能被应用。",
+  "tcl.gui.save_before_exit": "退出前保存！",
+  "tcl.gui.save_before_exit.tooltip": "保存或取消以退出 GUI。",
+
+  "tcl.list.move_up": "上移",
+  "tcl.list.move_down": "下移",
+  "tcl.list.remove": "移除",
+  "tcl.list.add_top": "新条目",
+  "tcl.list.empty": "列表为空",
+
+  "tcl.restart.title": "配置需要重新启动！",
+  "tcl.restart.message": "一个或多个选项需要你重新启动游戏来应用这些更改。",
+  "tcl.restart.yes": "关闭 Minecraft",
+  "tcl.restart.no": "忽略"
+}

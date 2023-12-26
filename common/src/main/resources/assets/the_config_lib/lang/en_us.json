@@ -1,0 +1,33 @@
+{
+  "tcl.control.boolean.true": "True",
+  "tcl.control.boolean.false": "False",
+
+  "tcl.control.action.execute": "EXECUTE",
+
+  "tcl.control.text.blank": "<blank>",
+
+  "tcl.gui.save": "Save Changes",
+  "tcl.gui.save.tooltip": "Makes the changes made permanent.",
+  "tcl.gui.finished.tooltip": "Closes the GUI.",
+  "tcl.gui.cancel.tooltip": "Forgets pending changes and closes the GUI.",
+  "tcl.gui.reset.tooltip": "Resets all options to default. (This is reversible!)",
+  "tcl.gui.undo": "Undo",
+  "tcl.gui.undo.tooltip": "Reverts all options back to what they were before editing.",
+  "tcl.gui.fail_apply": "Failed to apply",
+  "tcl.gui.fail_apply.tooltip": "There was an error and the changes couldn't be applied.",
+  "tcl.gui.save_before_exit": "Save before exiting!",
+  "tcl.gui.save_before_exit.tooltip": "Save or cancel to exit the GUI.",
+
+  "tcl.list.move_up": "Move up",
+  "tcl.list.move_down": "Move down",
+  "tcl.list.remove": "Remove",
+  "tcl.list.add_top": "New entry",
+  "tcl.list.empty": "List is empty",
+
+  "tcl.restart.title": "Config requires restart!",
+  "tcl.restart.message": "One or more options needs you to restart the game to apply the changes.",
+  "tcl.restart.yes": "Close Minecraft",
+  "tcl.restart.no": "Ignore",
+
+  "tcl.enum.desc": "%s: %s"
+}

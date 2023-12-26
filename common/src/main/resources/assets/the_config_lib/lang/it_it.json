@@ -1,0 +1,31 @@
+{
+  "tcl.control.boolean.true": "Vero",
+  "tcl.control.boolean.false": "Falso",
+
+  "tcl.control.action.execute": "ESEGUI",
+
+  "tcl.control.text.blank": "<vuoto>",
+
+  "tcl.gui.save": "Salva Modifiche",
+  "tcl.gui.save.tooltip": "Rende permanenti le modifiche apportate.",
+  "tcl.gui.finished.tooltip": "Chiude la GUI.",
+  "tcl.gui.cancel.tooltip": "Scarta le modifiche in sospeso e chiude la GUI.",
+  "tcl.gui.reset.tooltip": "Ripristina tutte le opzioni ai valori predefiniti. (È reversibile!)",
+  "tcl.gui.undo": "Annulla",
+  "tcl.gui.undo.tooltip": "Ripristina tutte le opzioni a ciò che erano prima della modifica.",
+  "tcl.gui.fail_apply": "Applicazione delle opzioni non riuscita",
+  "tcl.gui.fail_apply.tooltip": "Si è verificato un errore e le modifiche non hanno potuto essere applicate.",
+  "tcl.gui.save_before_exit": "Salvare prima di uscire!",
+  "tcl.gui.save_before_exit.tooltip": "Salva o annulla per uscire dalla GUI.",
+
+  "tcl.list.move_up": "Sposta su",
+  "tcl.list.move_down": "Sposta giù",
+  "tcl.list.remove": "Rimuovi",
+  "tcl.list.add_top": "Nuova voce",
+  "tcl.list.empty": "La lista è vuota",
+
+  "tcl.restart.title": "L'opzione richiede il riavvio!",
+  "tcl.restart.message": "Una o più opzioni richiedono il riavvio del gioco per applicare le modifiche.",
+  "tcl.restart.yes": "Chiudi Minecraft",
+  "tcl.restart.no": "Ignora"
+}

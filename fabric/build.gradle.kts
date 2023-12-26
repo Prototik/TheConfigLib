@@ -13,41 +13,41 @@ architectury {
 }
 
 loom {
-    silentMojangMappingsLicense()
-
-    accessWidenerPath.set(project(":common").loom.accessWidenerPath)
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
-val common by configurations.registering
-val shadowCommon by configurations.registering
-configurations.compileClasspath.get().extendsFrom(common.get())
-configurations["developmentFabric"].extendsFrom(common.get())
+val common: Configuration by configurations.dependencyScope("common")
+val shadowCommon: Configuration by configurations.dependencyScope("shadowCommon") {
+    exclude(group = "com.google.code.gson", "gson")
+    exclude(group = "org.jetbrains", "annotations")
+}
+val shadowCommonResolvable: Configuration by configurations.resolvable("shadowCommonResolvable") {
+    extendsFrom(shadowCommon)
+}
+
+configurations {
+    compileClasspath { extendsFrom(common) }
+    runtimeClasspath { extendsFrom(common) }
+    "developmentFabric" { extendsFrom(common) }
+}
 
 val minecraftVersion = libs.versions.minecraft.get()
 
 dependencies {
-    minecraft(libs.minecraft)
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment(libs.parchment)
-    })
     modImplementation(libs.fabric.loader)
 
     listOf(
         "fabric-resource-loader-v0",
     ).forEach { modApi(fabricApi.module(it, libs.versions.fabric.api.get())) }
 
-    libs.bundles.twelvemonkeys.imageio.let {
-        implementation(it)
-        include(it)
-    }
-    libs.bundles.quilt.parsers.let {
-        implementation(it)
-        include(it)
+    setOf(libs.bundles.twelvemonkeys.imageio, libs.bundles.parsers).forEach {
+        compileOnly(it)
+        localRuntime(it)
+        shadowCommon(it)
     }
 
-    "common"(project(path = ":common", configuration = "namedElements")) { isTransitive = false }
-    "shadowCommon"(project(path = ":common", configuration = "transformProductionFabric")) { isTransitive = false }
+    common(project(path = ":common", configuration = "namedElements")) { isTransitive = false }
+    shadowCommon(project(path = ":common", configuration = "transformProductionFabric")) { isTransitive = false }
 }
 
 java {
@@ -61,64 +61,63 @@ tasks {
         val modDescription: String by project
         val githubProject: String by project
 
-        inputs.property("id", modId)
-        inputs.property("group", project.group)
-        inputs.property("name", modName)
-        inputs.property("description", modDescription)
-        inputs.property("version", project.version)
-        inputs.property("github", githubProject)
+        val props = mapOf(
+            "id" to modId,
+            "group" to project.group,
+            "name" to modName,
+            "description" to modDescription,
+            "version" to project.version,
+            "github" to githubProject,
+        )
+
+        inputs.properties(props)
 
         filesMatching("fabric.mod.json") {
-            expand(
-                "id" to modId,
-                "group" to project.group,
-                "name" to modName,
-                "description" to modDescription,
-                "version" to project.version,
-                "github" to githubProject,
-            )
+            expand(props)
         }
     }
 
     shadowJar {
         exclude("architectury.common.json")
+        exclude("META-INF/maven")
 
-        configurations = listOf(shadowCommon.get())
-        archiveClassifier.set("dev-shadow")
+        relocate("com.twelvemonkeys", "dev.tcl.shadow.com.twelvemonkeys")
+        relocate("org.quiltmc.parsers", "dev.tcl.shadow.org.quiltmc.parsers")
+        mergeServiceFiles()
+
+        configurations = listOf(shadowCommonResolvable)
+        archiveClassifier = "dev-shadow"
     }
 
     remapJar {
-        injectAccessWidener.set(true)
-        inputFile.set(shadowJar.get().archiveFile)
+        injectAccessWidener = true
+        inputFile = shadowJar.flatMap { it.archiveFile }
         dependsOn(shadowJar)
-        archiveClassifier.set(null as String?)
-
-        from(rootProject.file("LICENSE"))
+        archiveClassifier = null
     }
 
     named<Jar>("sourcesJar") {
-        archiveClassifier.set("dev-sources")
+        archiveClassifier = "dev-sources"
         val commonSources = project(":common").tasks.named<Jar>("sourcesJar")
         dependsOn(commonSources)
-        from(commonSources.get().archiveFile.map { zipTree(it) })
+        from(commonSources.flatMap { it.archiveFile }.map { zipTree(it) })
     }
 
     remapSourcesJar {
-        archiveClassifier.set("sources")
+        archiveClassifier = "sources"
     }
 
     jar {
-        archiveClassifier.set("dev")
+        archiveClassifier = "dev"
     }
 }
 
-components["java"].run {
-    if (this is AdhocComponentWithVariants) {
-        withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
-            skip()
-        }
+components.named<AdhocComponentWithVariants>("java") {
+    withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
+        skip()
     }
 }
+
 val changelogText: String by ext
 val isBeta: Boolean by ext
 
@@ -131,6 +130,7 @@ if (modrinthId.isNotEmpty()) {
         versionNumber.set("${project.version}-fabric")
         versionType.set(if (isBeta) "beta" else "release")
         uploadFile.set(tasks["remapJar"])
+        additionalFiles.add(tasks["remapSourcesJar"])
         gameVersions.set(listOf("1.20.3", "1.20.4"))
         loaders.set(listOf("fabric", "quilt"))
         changelog.set(changelogText)
@@ -146,6 +146,9 @@ if (hasProperty("curseforge.token") && curseforgeId.isNotEmpty()) {
         project(closureOf<me.hypherionmc.cursegradle.CurseProject> {
             mainArtifact(tasks["remapJar"], closureOf<me.hypherionmc.cursegradle.CurseArtifact> {
                 displayName = "[Fabric] ${project.version}"
+            })
+            addArtifact(tasks["remapSourcesJar"], closureOf<me.hypherionmc.cursegradle.CurseArtifact> {
+                displayName = "[Fabric] ${project.version} (sources)"
             })
 
             id = curseforgeId
@@ -165,18 +168,19 @@ if (hasProperty("curseforge.token") && curseforgeId.isNotEmpty()) {
         })
     }
 }
+
 rootProject.tasks["releaseMod"].dependsOn(tasks["curseforge"])
 
 publishing {
     publications {
         create<MavenPublication>("fabric") {
-            groupId = "dev.isxander.yacl"
-            artifactId = "yet-another-config-lib-fabric"
+            artifactId = base.archivesName.map { "$it-${project.name}" }.get()
 
             from(components["java"])
         }
     }
 }
+
 tasks.findByPath("publishFabricPublicationToReleasesRepository")?.let {
     rootProject.tasks["releaseMod"].dependsOn(it)
 }

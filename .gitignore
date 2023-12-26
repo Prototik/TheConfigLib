@@ -1,6 +1,7 @@
 run
 build
-/.idea
+/.idea/*
+!/.idea/icon.png
 .gradle
 !.gitkeep
 /.architectury-transformer

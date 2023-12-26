@@ -3,7 +3,7 @@ plugins {
 }
 
 base {
-    archivesName.set("yet-another-config-lib")
+    archivesName.set("the-config-lib")
 }
 
 architectury {
@@ -12,21 +12,14 @@ architectury {
 }
 
 loom {
-    silentMojangMappingsLicense()
-
-    accessWidenerPath.set(file("src/main/resources/yacl.accesswidener"))
+    accessWidenerPath = file("src/main/resources/the-config-lib.accesswidener")
 }
 
 dependencies {
-    minecraft(libs.minecraft)
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment(libs.parchment)
-    })
     modImplementation(libs.fabric.loader)
 
     implementation(libs.bundles.twelvemonkeys.imageio)
-    implementation(libs.bundles.quilt.parsers)
+    implementation(libs.bundles.parsers)
 }
 
 java {
@@ -44,13 +37,13 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("common") {
-            groupId = "dev.isxander.yacl"
-            artifactId = "yet-another-config-lib-common"
+            artifactId = base.archivesName.map { "$it-common" }.get()
 
             from(components["java"])
         }
     }
 }
+
 tasks.findByPath("publishCommonPublicationToReleasesRepository")?.let {
     rootProject.tasks["releaseMod"].dependsOn(it)
 }

@@ -1,0 +1,23 @@
+{
+  "tcl.control.boolean.true": "Ναι",
+  "tcl.control.boolean.false": "Όχι",
+
+  "tcl.control.action.execute": "ΕΚΤΕΛΕΣΗ",
+
+  "tcl.gui.save": "Αποθήκευση Αλλαγών",
+  "tcl.gui.save.tooltip": "Μονιμοποιήει τις αλλαγές.",
+  "tcl.gui.finished.tooltip": "Κλείνει το GUI.",
+  "tcl.gui.cancel.tooltip": "Ξεχνά τις ενεργές αλλαγές και κλείνει το μενού.",
+  "tcl.gui.reset.tooltip": "Επαναφέρει όλες τις επιλογές στις προεπιλογές τους. (Μπορεί να ανερεθε)",
+  "tcl.gui.undo": "Επαναφορά",
+  "tcl.gui.undo.tooltip": "Επαναφέρει όλες τις ενεργές επιλογές στις προεπιλογές τους.",
+  "tcl.gui.fail_apply": "Αποτυχία εφαρμογής",
+  "tcl.gui.fail_apply.tooltip": "Δημιουργήθηκε ένα σφάλμα και οι αλλαγές δεν μπόρεσαν να εφαρμοστούν.",
+  "tcl.gui.save_before_exit": "Αποθήκευση πριν το κλείσιμο!",
+  "tcl.gui.save_before_exit.tooltip": "Αποθήκευσε ή ακύρωσε για να βγεις απ' το μενού."
+
+  "tcl.restart.title": "Η ρύθμιση απαιτεί επανεκκήνιση!",
+  "tcl.restart.message": "Μία ή παραπάνω επιλογές προϋποθέτουν επανεκκήνηση το παιχνιδιού για να εφαρμοστούν.",
+  "tcl.restart.yes": "Κλείσιμο του Minecraft",
+  "tcl.restart.no": "Αγνόησε το για τώρα"
+}

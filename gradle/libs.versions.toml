@@ -2,27 +2,29 @@
 # Plugins
 architectury_loom = "1.4.+"
 architectury_plugin = "3.4.+"
-shadow = "7.1.+"
-minotaur = "2.7.+"
-cursegradle = "2.+"
-github_release = "2.4.+"
-machete = "2.+"
-grgit = "5.0.+"
+shadow = "8.1.1"
+minotaur = "2.8.7"
+cursegradle = "2.0.1"
+github_release = "2.5.2"
+machete = "2.0.1"
 
 minecraft = "1.20.4"
 parchment = "2023.10.22"
 fabric_loader = "0.14.25"
 
 # Common Dependencies
-mixin_extras = "0.2.0"
-twelvemonkeys_imageio = "3.10.0"
+twelvemonkeys_imageio = "3.10.1"
 quilt_parsers = "0.2.1"
 
 # Fabric-like Dependencies
 fabric_api = "0.91.1+1.20.3"
+modmenu = "9.0.0"
 
 # Forge Dependencies
-neoforge = "20.4.0-beta"
+forge = "1.20.4-49.0.11"
+
+# NeoForge Dependencies
+neoforge = "20.4.57-beta"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -30,7 +32,6 @@ fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_l
 parchment = { module = "org.parchmentmc.data:parchment-1.20.2", version.ref = "parchment" }
 
 # Common Dependencies
-mixin_extras_common = { module = "com.github.llamalad7.mixinextras:mixinextras-common", version.ref = "mixin_extras" }
 twelvemonkeys_imageio_core = { module = "com.twelvemonkeys.imageio:imageio-core", version.ref = "twelvemonkeys_imageio" }
 twelvemonkeys_imageio_webp = { module = "com.twelvemonkeys.imageio:imageio-webp", version.ref = "twelvemonkeys_imageio" }
 twelvemonkeys_imageio_metadata = { module = "com.twelvemonkeys.imageio:imageio-metadata", version.ref = "twelvemonkeys_imageio" }
@@ -42,8 +43,12 @@ quilt_parsers_gson = { module = "org.quiltmc.parsers:gson", version.ref = "quilt
 
 # Fabric-like Dependencies
 fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
+modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 
 # Forge Dependencies
+forge = { module = "net.minecraftforge:forge", version.ref = "forge" }
+
+# NeoForge Dependencies
 neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
 
 [bundles]
@@ -55,7 +60,7 @@ twelvemonkeys_imageio = [
     "twelvemonkeys_common_io",
     "twelvemonkeys_common_image"
 ]
-quilt_parsers = [
+parsers = [
     "quilt_parsers_json",
     "quilt_parsers_gson"
 ]
@@ -69,4 +74,3 @@ minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
 cursegradle = { id = "me.hypherionmc.cursegradle", version.ref = "cursegradle" }
 github_release = { id = "com.github.breadmoirai.github-release", version.ref = "github_release" }
 machete = { id = "io.github.p03w.machete", version.ref = "machete" }
-grgit = { id = "org.ajoberstar.grgit", version.ref = "grgit" }

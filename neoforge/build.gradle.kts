@@ -1,7 +1,4 @@
-import org.gradle.api.component.AdhocComponentWithVariants
 import org.gradle.jvm.tasks.Jar
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.libs
 
 plugins {
     alias(libs.plugins.architectury.loom)
@@ -16,43 +13,37 @@ architectury {
 }
 
 loom {
-    silentMojangMappingsLicense()
-
-    accessWidenerPath.set(project(":common").loom.accessWidenerPath)
-
-    neoForge {
-
-    }
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
-val common by configurations.registering
-val shadowCommon by configurations.registering
-configurations.compileClasspath.get().extendsFrom(common.get())
-configurations["developmentNeoForge"].extendsFrom(common.get())
+val common: Configuration by configurations.dependencyScope("common")
+val shadowCommon: Configuration by configurations.dependencyScope("shadowCommon") {
+    exclude(group = "com.google.code.gson", "gson")
+    exclude(group = "org.jetbrains", "annotations")
+}
+val shadowCommonResolvable: Configuration by configurations.resolvable("shadowCommonResolvable") {
+    extendsFrom(shadowCommon)
+}
+
+configurations {
+    compileClasspath { extendsFrom(common) }
+    runtimeClasspath { extendsFrom(common) }
+    "developmentNeoForge" { extendsFrom(common) }
+}
 
 val minecraftVersion: String = libs.versions.minecraft.get()
 
 dependencies {
-    minecraft(libs.minecraft)
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment(libs.parchment)
-    })
     neoForge(libs.neoforge)
 
-    libs.bundles.twelvemonkeys.imageio.let {
-        implementation(it)
-        include(it)
+    setOf(libs.bundles.twelvemonkeys.imageio, libs.bundles.parsers).forEach {
+        compileOnly(it)
         forgeRuntimeLibrary(it)
-    }
-    libs.bundles.quilt.parsers.let {
-        implementation(it)
-        include(it)
-        forgeRuntimeLibrary(it)
+        shadowCommon(it)
     }
 
-    "common"(project(path = ":common", configuration = "namedElements")) { isTransitive = false }
-    "shadowCommon"(project(path = ":common", configuration = "transformProductionNeoForge")) { isTransitive = false }
+    common(project(path = ":common", configuration = "namedElements")) { isTransitive = false }
+    shadowCommon(project(path = ":common", configuration = "transformProductionNeoForge")) { isTransitive = false }
 }
 
 java {
@@ -66,63 +57,62 @@ tasks {
         val modDescription: String by rootProject
         val githubProject: String by rootProject
 
-        inputs.property("id", modId)
-        inputs.property("group", project.group)
-        inputs.property("name", modName)
-        inputs.property("description", modDescription)
-        inputs.property("version", project.version)
-        inputs.property("github", githubProject)
+        val props = mapOf(
+            "id" to modId,
+            "group" to project.group,
+            "name" to modName,
+            "description" to modDescription,
+            "version" to project.version,
+            "github" to githubProject,
+        )
+
+        inputs.properties(props)
 
         filesMatching(listOf("META-INF/mods.toml", "pack.mcmeta")) {
-            expand(
-                "id" to modId,
-                "group" to project.group,
-                "name" to modName,
-                "description" to modDescription,
-                "version" to project.version,
-                "github" to githubProject,
-            )
+            expand(props)
         }
     }
 
     shadowJar {
-        exclude("fabric.mod.json")
         exclude("architectury.common.json")
+        exclude("META-INF/maven")
 
-        configurations = listOf(shadowCommon.get())
-        archiveClassifier.set("dev-shadow")
+        relocate("com.twelvemonkeys", "dev.tcl.shadow.com.twelvemonkeys")
+        relocate("org.quiltmc.parsers", "dev.tcl.shadow.org.quiltmc.parsers")
+        mergeServiceFiles()
+
+        configurations = listOf(shadowCommonResolvable)
+        archiveClassifier = "dev-shadow"
     }
 
     remapJar {
         injectAccessWidener.set(true)
-        inputFile.set(shadowJar.get().archiveFile)
-        dependsOn(shadowJar)
-        archiveClassifier.set(null as String?)
+        atAccessWideners.add(loom.accessWidenerPath.map { it.asFile.name })
 
-        from(rootProject.file("LICENSE"))
+        inputFile = shadowJar.flatMap { it.archiveFile }
+        dependsOn(shadowJar)
+        archiveClassifier = null
     }
 
     named<Jar>("sourcesJar") {
-        archiveClassifier.set("dev-sources")
+        archiveClassifier = "dev-sources"
         val commonSources = project(":common").tasks.named<Jar>("sourcesJar")
         dependsOn(commonSources)
-        from(commonSources.get().archiveFile.map { zipTree(it) })
+        from(commonSources.flatMap { it.archiveFile }.map { zipTree(it) })
     }
 
     remapSourcesJar {
-        archiveClassifier.set("sources")
+        archiveClassifier = "sources"
     }
 
     jar {
-        archiveClassifier.set("dev")
+        archiveClassifier = "dev"
     }
 }
 
-components["java"].run {
-    if (this is AdhocComponentWithVariants) {
-        withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
-            skip()
-        }
+components.named<AdhocComponentWithVariants>("java") {
+    withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
+        skip()
     }
 }
 
@@ -138,6 +128,7 @@ if (modrinthId.isNotEmpty()) {
         versionNumber.set("${project.version}-neoforge")
         versionType.set(if (isBeta) "beta" else "release")
         uploadFile.set(tasks["remapJar"])
+        additionalFiles.add(tasks["remapSourcesJar"])
         gameVersions.set(listOf("1.20.4", "1.20.3"))
         loaders.set(listOf("neoforge"))
         changelog.set(changelogText)
@@ -153,6 +144,9 @@ if (hasProperty("curseforge.token") && curseforgeId.isNotEmpty()) {
         project(closureOf<me.hypherionmc.cursegradle.CurseProject> {
             mainArtifact(tasks["remapJar"], closureOf<me.hypherionmc.cursegradle.CurseArtifact> {
                 displayName = "[NeoForge] ${project.version}"
+            })
+            addArtifact(tasks["remapSourcesJar"], closureOf<me.hypherionmc.cursegradle.CurseArtifact> {
+                displayName = "[NeoForge] ${project.version} (sources)"
             })
 
             id = curseforgeId
@@ -172,18 +166,19 @@ if (hasProperty("curseforge.token") && curseforgeId.isNotEmpty()) {
         })
     }
 }
+
 rootProject.tasks["releaseMod"].dependsOn(tasks["curseforge"])
 
 publishing {
     publications {
         create<MavenPublication>("neoforge") {
-            groupId = "dev.isxander.yacl"
-            artifactId = "yet-another-config-lib-neoforge"
+            artifactId = base.archivesName.map { "$it-${project.name}" }.get()
 
             from(components["java"])
         }
     }
 }
+
 tasks.findByPath("publishNeoforgePublicationToReleasesRepository")?.let {
     rootProject.tasks["releaseMod"].dependsOn(it)
 }

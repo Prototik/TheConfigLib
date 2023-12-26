@@ -1,0 +1,34 @@
+{
+  "modmenu.summaryTranslation.tcl": "Төзүче нигезендә Minecraft өчен көйләүләр китапханәсе.",
+  "modmenu.descriptionTranslation.tcl": "YetAnotherConfigLib (tcl) — нәкъ менә кирәк нәрсә. Төзүче нигезендә Minecraft өчен көйләүләр китапханәсе.",
+  
+  "tcl.control.boolean.true": "Дөрес",
+  "tcl.control.boolean.false": "Ялган",
+
+  "tcl.control.action.execute": "ҮТӘҮ",
+
+  "tcl.control.text.blank": "<буш>",
+
+  "tcl.gui.save": "Үзгәрешләрне саклау",
+  "tcl.gui.save.tooltip": "Кертелгән үзгәрешләрне даими итә.",
+  "tcl.gui.finished.tooltip": "GUI-ны яба.",
+  "tcl.gui.cancel.tooltip": "Үзгәрешләрне баш тарта һәм GUI-ны яба.",
+  "tcl.gui.reset.tooltip": "Барлык көйләүләрне беренчелгә кайтара. (Аларны төзәтергә ярый!)",
+  "tcl.gui.undo": "Баш тарту",
+  "tcl.gui.undo.tooltip": "Үзгәрешләргә кадәр булган халәткә барлык көйләүләрне төзәтә.",
+  "tcl.gui.fail_apply": "Кулланып булмады",
+  "tcl.gui.fail_apply.tooltip": "Үзгәрешләрне кулланып булмады; хата булды.",
+  "tcl.gui.save_before_exit": "Чыкканчы саклагыз!",
+  "tcl.gui.save_before_exit.tooltip": "GUI-тан чыгу өчен саклагыз яки баш тартыгыз.",
+
+  "tcl.list.move_up": "Өскә күчү",
+  "tcl.list.move_down": "Аска күчү",
+  "tcl.list.remove": "Бетерү",
+  "tcl.list.add_top": "Яңа элемент",
+  "tcl.list.empty": "Исемлек буш",
+
+  "tcl.restart.title": "Көйләү яңадан кушуны таләп ителә!",
+  "tcl.restart.message": "Үзгәрешләр куллану өчен бер яки күбрәк көйләү уенның яңадан кушуын таләп ителә.",
+  "tcl.restart.yes": "Minecraft-ны ябу",
+  "tcl.restart.no": "Әһәмият бирмәү"
+}

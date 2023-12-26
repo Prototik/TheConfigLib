@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[49,)"
+#issueTrackerURL = ""
+license = "LGPL-3.0-or-later"
+
+[[mods]]
+modId = "${id}"
+version = "${version}"
+displayName = "${name}"
+authors = "Prototik, isXander"
+description = '''
+${description}
+'''
+logoFile = "the-config-lib.png"
+
+[["dependencies.${id}"]]
+modId = "forge"
+mandatory = true
+versionRange = "[49,)"
+ordering = "NONE"
+side = "BOTH"
+
+[["dependencies.${id}"]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.3,)"
+ordering = "NONE"
+side = "BOTH"

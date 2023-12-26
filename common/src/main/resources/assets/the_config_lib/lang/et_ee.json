@@ -1,0 +1,18 @@
+{
+  "tcl.control.boolean.true": "Tõene",
+  "tcl.control.boolean.false": "Väär",
+
+  "tcl.control.action.execute": "KÄIVITA",
+
+  "tcl.gui.save": "Salvesta muudatused",
+  "tcl.gui.save.tooltip": "Teeb tehtud muudatused püsivaks.",
+  "tcl.gui.finished.tooltip": "Sulgeb liidese.",
+  "tcl.gui.cancel.tooltip": "Unustab tehtud muudatused ja sulgeb liidese.",
+  "tcl.gui.reset.tooltip": "Lähtestab kõik valikud vaikeväärtustele. (Seda saab tagasi võtta!)",
+  "tcl.gui.undo": "Võta tagasi",
+  "tcl.gui.undo.tooltip": "Lähtestab kõik valikud muutmise-eelsetele väärtustele.",
+  "tcl.gui.fail_apply": "Rakendamine ebaõnnestus",
+  "tcl.gui.fail_apply.tooltip": "Esines viga ja muudatusi ei saadud rakendada.",
+  "tcl.gui.save_before_exit": "Salvesta enne väljumist!",
+  "tcl.gui.save_before_exit.tooltip": "Liidesest väljumiseks salvesta või loobu."
+}

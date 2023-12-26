@@ -1,82 +1,183 @@
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
+import org.eclipse.jgit.internal.storage.file.FileRepository
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
+    }
+}
+
 plugins {
+    base
     alias(libs.plugins.architectury.plugin)
     alias(libs.plugins.architectury.loom) apply false
 
     alias(libs.plugins.minotaur) apply false
     alias(libs.plugins.cursegradle) apply false
     alias(libs.plugins.github.release)
-    alias(libs.plugins.grgit)
 }
 
 architectury {
     minecraft = libs.versions.minecraft.get()
 }
 
-version = "3.3.1+1.20.4"
+val branch: Provider<String> = provider {
+    FileRepository(layout.projectDirectory.asFile).branch
+}
 
 val isBeta = "beta" in version.toString()
 val changelogText = rootProject.file("changelogs/${project.version}.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
-val snapshotVer = "${grgit.branch.current().name.replace('/', '.')}-SNAPSHOT"
 
-allprojects {
-    apply(plugin = "java")
-    apply(plugin = "maven-publish")
-    apply(plugin = "architectury-plugin")
+base {
+    archivesName = "the-config-lib"
+}
 
+if ("GITHUB_ACTIONS" in System.getenv().keys) {
+    version = "$version-SNAPSHOT"
+}
+
+subprojects {
     version = rootProject.version
-    group = "dev.isxander"
-
-    if (System.getenv().containsKey("GITHUB_ACTIONS")) {
-        version = "$version+$snapshotVer"
-    }
 
     pluginManager.withPlugin("base") {
-        val base = the<BasePluginExtension>()
-
-        base.archivesName.set("yet-another-config-lib-${project.name}")
+        base.archivesName.convention(rootProject.base.archivesName)
     }
 
     ext["changelogText"] = changelogText
     ext["isBeta"] = isBeta
 
     repositories {
-        mavenCentral()
-        maven("https://maven.isxander.dev/releases")
-        maven("https://maven.isxander.dev/snapshots")
-        maven("https://maven.quiltmc.org/repository/release")
-        maven("https://maven.neoforged.net/releases")
-        maven("https://maven.parchmentmc.org")
-        maven("https://api.modrinth.com/maven") {
-            name = "Modrinth"
-            content {
+        maven("https://maven.aur.rocks/releases") {
+            name = "kkIncReleases"
+            mavenContent {
+                releasesOnly()
+            }
+        }
+        maven("https://maven.aur.rocks/snapshots") {
+            name = "kkIncSnapshots"
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
+        mavenCentral {
+            mavenContent {
+                excludeGroup("com.twelvemonkeys")
+                excludeGroup("com.twelvemonkeys.common")
+                excludeGroup("com.twelvemonkeys.imageio")
+            }
+        }
+        maven("https://maven.neoforged.net/releases") {
+            name = "NeoForged"
+        }
+        exclusiveContent {
+            forRepository {
+                maven("https://api.modrinth.com/maven") {
+                    name = "Modrinth"
+                }
+            }
+            filter {
                 includeGroup("maven.modrinth")
+            }
+        }
+        exclusiveContent {
+            forRepository {
+                maven("https://maven.parchmentmc.org") {
+                    name = "ParchmentMC"
+                }
+            }
+            filter {
+                includeGroupByRegex("^org.parchmentmc(\\..+)?$")
             }
         }
     }
 
-    pluginManager.withPlugin("publishing") {
-        val publishing = the<PublishingExtension>()
+    apply(plugin = "java")
+    apply(plugin = "maven-publish")
+    apply(plugin = "architectury-plugin")
+
+    pluginManager.withPlugin("org.gradle.java-base") {
+        val java: JavaPluginExtension by extensions
+
+        java.apply {
+            withSourcesJar()
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+        }
+
+        tasks.withType<JavaCompile>().configureEach {
+            options.encoding = "UTF-8"
+            options.release = 17
+        }
+    }
+
+    pluginManager.withPlugin("dev.architectury.loom") {
+        val loom: LoomGradleExtensionAPI by extensions
+
+        loom.apply {
+            silentMojangMappingsLicense()
+        }
+
+        dependencies {
+            "minecraft"(libs.minecraft)
+            "mappings"(loom.layered {
+                officialMojangMappings()
+                parchment(libs.parchment)
+            })
+        }
+    }
+
+    pluginManager.withPlugin("org.gradle.publishing") {
+        val publishing: PublishingExtension by extensions
 
         publishing.repositories {
-            val username = "XANDER_MAVEN_USER".let { System.getenv(it) ?: findProperty(it) }?.toString()
-            val password = "XANDER_MAVEN_PASS".let { System.getenv(it) ?: findProperty(it) }?.toString()
+            val username = "MAVEN_USER".let { System.getenv(it) ?: findProperty(it) }?.toString()
+            val password = "MAVEN_PASS".let { System.getenv(it) ?: findProperty(it) }?.toString()
             if (username != null && password != null) {
-                maven(url = "https://maven.isxander.dev/releases") {
-                    name = "Releases"
+                maven("https://maven.aur.rocks/releases") {
+                    name = "kkIncReleases"
+                    mavenContent {
+                        releasesOnly()
+                    }
                     credentials {
                         this.username = username
                         this.password = password
                     }
                 }
-                maven(url = "https://maven.isxander.dev/snapshots") {
-                    name = "Snapshots"
+                maven("https://maven.aur.rocks/snapshots") {
+                    name = "kkIncSnapshots"
+                    mavenContent {
+                        snapshotsOnly()
+                    }
                     credentials {
                         this.username = username
                         this.password = password
                     }
                 }
-            } else {
-                println("Xander Maven credentials not satisfied.")
+            }
+        }
+
+        publishing.publications.withType<MavenPublication>().configureEach {
+            pom {
+                description.convention(provider { project.description })
+
+                licenses {
+                    license {
+                        name.set("GNU Lesser General Public License")
+                        url.set("https://www.gnu.org/licenses/lgpl-3.0.html")
+                        distribution.set("repo")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("Prototik")
+                        name.set("Sergey Shatunov")
+                        email.set("me@aur.rocks")
+                    }
+                }
             }
         }
     }
@@ -87,17 +188,18 @@ githubRelease {
 
     val githubProject: String by rootProject
     val split = githubProject.split("/")
-    owner(split[0])
-    repo(split[1])
-    tagName("${project.version}")
-    targetCommitish(grgit.branch.current().name)
-    body(changelogText)
-    prerelease(isBeta)
+    owner = split[0]
+    repo = split[1]
+    tagName = project.version.toString()
+    targetCommitish = branch
+    body = changelogText
+    prerelease = isBeta
     releaseAssets(
-        { findProject(":fabric")?.tasks?.get("remapJar")?.outputs?.files },
-        { findProject(":fabric")?.tasks?.get("remapSourcesJar")?.outputs?.files },
-        { findProject(":forge")?.tasks?.get("remapJar")?.outputs?.files },
-        { findProject(":forge")?.tasks?.get("remapSourcesJar")?.outputs?.files },
+        listOf(":fabric", ":forge", ":neoforge").mapNotNull { findProject(it) }.flatMap { project ->
+            listOf("remapJar", "remapSourcesJar").map { taskName ->
+                { project.tasks[taskName].outputs.files }
+            }
+        }
     )
 }
 
@@ -110,6 +212,7 @@ tasks.register("releaseMod") {
 tasks.register("buildAll") {
     group = "mod"
 
-    findProject(":fabric")?.let { dependsOn(it.tasks["build"]) }
-    findProject(":forge")?.let { dependsOn(it.tasks["build"]) }
+    listOf(":fabric", ":forge", ":neoforge").mapNotNull { findProject(it) }.forEach { project ->
+        dependsOn(project.tasks["build"])
+    }
 }

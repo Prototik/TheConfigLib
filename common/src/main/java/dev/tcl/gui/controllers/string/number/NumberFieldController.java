@@ -1,0 +1,79 @@
+package dev.tcl.gui.controllers.string.number;
+
+import dev.tcl.api.Option;
+import dev.tcl.api.TheConfigLib;
+import dev.tcl.api.utils.Dimension;
+import dev.tcl.api.controller.ValueFormatter;
+import dev.tcl.gui.AbstractWidget;
+import dev.tcl.gui.TCLScreen;
+import dev.tcl.gui.controllers.slider.ISliderController;
+import dev.tcl.gui.controllers.string.IStringController;
+import dev.tcl.gui.controllers.string.StringControllerElement;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
+
+/**
+ * Controller that allows you to enter in numbers using a text field.
+ *
+ * @param <T> number type
+ */
+public abstract class NumberFieldController<T extends Number> implements ISliderController<T>, IStringController<T> {
+
+    protected static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
+    private static final DecimalFormatSymbols DECIMAL_FORMAT_SYMBOLS = DecimalFormatSymbols.getInstance();
+
+    private final Option<T> option;
+    private final ValueFormatter<T> displayFormatter;
+
+    public NumberFieldController(Option<T> option, ValueFormatter<T> displayFormatter) {
+        this.option = option;
+        this.displayFormatter = displayFormatter;
+    }
+
+    @Override
+    public Option<T> option() {
+        return this.option;
+    }
+
+    @Override
+    public void setFromString(String value) {
+        try {
+            setPendingValue(Mth.clamp(NUMBER_FORMAT.parse(value).doubleValue(), min(), max()));
+        } catch (ParseException ignore) {
+            TheConfigLib.LOGGER.warn("Failed to parse number: {}", value);
+        }
+    }
+
+    @Override
+    public double pendingValue() {
+        return option().pendingValue().doubleValue();
+    }
+
+    @Override
+    public boolean isInputValid(String input) {
+        input = input.replace(DECIMAL_FORMAT_SYMBOLS.getGroupingSeparator() + "", "");
+        ParsePosition parsePosition = new ParsePosition(0);
+        NUMBER_FORMAT.parse(input, parsePosition);
+        return parsePosition.getIndex() == input.length();
+    }
+
+    @Override
+    public Component formatValue() {
+        return displayFormatter.format(option().pendingValue());
+    }
+
+    @Override
+    public AbstractWidget provideWidget(TCLScreen screen, Dimension<Integer> widgetDimension) {
+        return new StringControllerElement(this, screen, widgetDimension, false);
+    }
+
+    @Override
+    public double interval() {
+        return -1;
+    }
+}

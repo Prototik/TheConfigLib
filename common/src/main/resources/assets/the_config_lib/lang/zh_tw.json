@@ -1,0 +1,29 @@
+{
+    "tcl.control.boolean.true": "是",
+    "tcl.control.boolean.false": "否",
+  
+    "tcl.control.action.execute": "執行",
+  
+    "tcl.gui.save": "儲存變更",
+    "tcl.gui.save.tooltip": "儲存你的變更。",
+    "tcl.gui.finished.tooltip": "關閉介面。",
+    "tcl.gui.cancel.tooltip": "取消變更並關閉介面。",
+    "tcl.gui.reset.tooltip": "重設所有選項到預設。（這可以復原！）",
+    "tcl.gui.undo": "復原",
+    "tcl.gui.undo.tooltip": "將所有選項恢復成編輯前的狀態。",
+    "tcl.gui.fail_apply": "套用失敗",
+    "tcl.gui.fail_apply.tooltip": "發生錯誤，無法套用變更。",
+    "tcl.gui.save_before_exit": "在離開時儲存！",
+    "tcl.gui.save_before_exit.tooltip": "儲存或是取消並離開介面。",
+  
+    "tcl.list.move_up": "上移",
+    "tcl.list.move_down": "下移",
+    "tcl.list.remove": "移除",
+    "tcl.list.add_top": "新增項目",
+    "tcl.list.empty": "列表為空",
+  
+    "tcl.restart.title": "變更設定需要重開遊戲！",
+    "tcl.restart.message": "一個或多個選項需要你重開遊戲才能套用變更。",
+    "tcl.restart.yes": "關閉 Minecraft",
+    "tcl.restart.no": "忽略"
+}

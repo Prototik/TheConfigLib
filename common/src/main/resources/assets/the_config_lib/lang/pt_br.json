@@ -1,0 +1,18 @@
+{
+  "tcl.control.boolean.true": "Verdadeiro",
+  "tcl.control.boolean.false": "Falso",
+
+  "tcl.control.action.execute": "EXECUTAR",
+
+  "tcl.gui.save": "Salvar Mudanças",
+  "tcl.gui.save.tooltip": "Faz as mudanças serem permanentes.",
+  "tcl.gui.finished.tooltip": "Fecha o GUI.",
+  "tcl.gui.cancel.tooltip": "Esquece as mudanças pendentes e fecha o GUI.",
+  "tcl.gui.reset.tooltip": "Reinicia todas as opções para o valor padrão. (Isso é irreversível!)",
+  "tcl.gui.undo": "Desfazer",
+  "tcl.gui.undo.tooltip": "Reverte todas as opções como elas estavam antes de serem editadas.",
+  "tcl.gui.fail_apply": "Falha na aplicação",
+  "tcl.gui.fail_apply.tooltip": "Houve um erro e as mudanças não puderam ser aplicadas.",
+  "tcl.gui.save_before_exit": "Salve antes de sair!",
+  "tcl.gui.save_before_exit.tooltip": "Salve ou calcele para sair do GUI."
+}

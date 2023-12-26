@@ -1,0 +1,29 @@
+{
+  "tcl.control.boolean.true": "Праўда",
+  "tcl.control.boolean.false": "Няпраўда",
+
+  "tcl.control.action.execute": "ВЫКАНАЦЬ",
+
+  "tcl.gui.save": "Захаваць змены",
+  "tcl.gui.save.tooltip": "Робіць змены перманентнымі.",
+  "tcl.gui.finished.tooltip": "Закрыць GUI.",
+  "tcl.gui.cancel.tooltip": "Забыць усе змены і зачыніць GUI.",
+  "tcl.gui.reset.tooltip": "Скінуць усе налады да вызначаных. (Гэта можна адмяніць!)",
+  "tcl.gui.undo": "Адмяніць",
+  "tcl.gui.undo.tooltip": "Вярнуць усе налады да моманту змен.",
+  "tcl.gui.fail_apply": "Памылка пры ўжыванні",
+  "tcl.gui.fail_apply.tooltip": "Узнікла памылка і змены не могуць быць ужыты.",
+  "tcl.gui.save_before_exit": "Захавайце перад выхадам!",
+  "tcl.gui.save_before_exit.tooltip": "Захавайце ці скасуйце выхад з GUI.",
+
+  "tcl.list.move_up": "Перамясціць вышэй",
+  "tcl.list.move_down": "Перамясціць ніжэй",
+  "tcl.list.remove": "Выдаліць",
+  "tcl.list.add_top": "New entry",
+  "tcl.list.empty": "Спіс пусты",
+
+  "tcl.restart.title": "Налады патрабуюць перазапуск!",
+  "tcl.restart.message": "Адна ці больш налад патрабуе перазапуск гульні, каб ужыць змены.",
+  "tcl.restart.yes": "Закрыць Minecraft",
+  "tcl.restart.no": "Ігнараваць"
+}

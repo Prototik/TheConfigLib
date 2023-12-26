@@ -1,0 +1,24 @@
+{
+    "tcl.control.boolean.true": "§atrue",
+    "tcl.control.boolean.false": "§cfalse",
+
+    "tcl.control.action.execute": "Выполнить",
+
+    "tcl.gui.save": "Сохранить",
+    "tcl.gui.save.tooltip": "Сохранить изменения до следующего редактирования.",
+    "tcl.gui.finished.tooltip": "Закрыть меню.",
+    "tcl.gui.cancel": "Назад",
+    "tcl.gui.cancel.tooltip": "Отменить изменения и закрыть настройки.",
+    "tcl.gui.reset.tooltip": "Сбросить все настройки до значений по умолчанию (их можно восстановить).",
+    "tcl.gui.undo": "Отменить",
+    "tcl.gui.undo.tooltip": "Вернуть все настройки к состоянию, в котором они были до изменений.",
+    "tcl.gui.fail_apply": "Не удалось сохранить",
+    "tcl.gui.fail_apply.tooltip": "Возникла ошибка; изменения невозможно применить.",
+    "tcl.gui.save_before_exit": "Сохраните перед закрытием",
+    "tcl.gui.save_before_exit.tooltip": "Сохраните или отмените изменения, чтобы закрыть настройки.",
+
+    "tcl.restart.title": "Настройки требуют перезагрузки.",
+    "tcl.restart.message": "Одна или несколько настроек требует перезапуска игры для применения изменений.",
+    "tcl.restart.yes": "Закрыть Minecraft",
+    "tcl.restart.no": "Игнорировать"
+}

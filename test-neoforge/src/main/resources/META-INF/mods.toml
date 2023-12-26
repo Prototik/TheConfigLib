@@ -4,28 +4,32 @@ loaderVersion = "[1,)"
 license = "LGPL-3.0-or-later"
 
 [[mods]]
-modId = "yacl_test"
+modId = "tcl_test"
 version = "1"
-displayName = "YACL Test"
-authors = "isXander"
+displayName = "TCL Test"
+authors = "Prototik, isXander"
 description = '''
-Test mod for YACL
+Test mod for TCL
 '''
 #logoFile = ""
 
-[[mixins]]
-config = "yacl-test.mixins.json"
-
-[[dependencies.yacl_test]]
+[[dependencies.tcl_test]]
 modId = "neoforge"
-mandatory = true
+type = "required"
 versionRange = "[20,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.yacl_test]]
+[[dependencies.tcl_test]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "1.20.4"
 ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tcl_test]]
+modId = "the_config_lib"
+type = "required"
+versionRange = "*"
+ordering = "AFTER"
 side = "BOTH"

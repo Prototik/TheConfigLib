@@ -5,14 +5,15 @@
   "name": "${name}",
   "description": "${description}",
   "authors": [
+    "Prototik",
     "isXander"
   ],
   "contact": {
-    "homepage": "https://isxander.dev",
+    "email": "me@aur.rocks",
     "issues": "https://github.com/${github}/issues",
     "sources": "https://github.com/${github}"
   },
-  "icon": "yacl-128x.png",
+  "icon": "the-config-lib.png",
   "license": "LGPL-3.0-or-later",
   "environment": "*",
   "depends": {
@@ -22,12 +23,15 @@
     "fabric-resource-loader-v0": "*"
   },
   "mixins": [
-    "yacl.mixins.json",
-    "yacl-fabric.mixins.json"
+    "the-config-lib-common.mixins.json",
+    "the-config-lib-fabric.mixins.json"
   ],
   "entrypoints": {
+    "main": [
+      "dev.tcl.platform.fabric.TCLFabricEntrypoint"
+    ],
     "client": [
-      "dev.isxander.yacl3.platform.fabric.YACLFabricEntrypoint"
+      "dev.tcl.platform.fabric.TCLClientFabricEntrypoint"
     ]
   },
   "custom": {
