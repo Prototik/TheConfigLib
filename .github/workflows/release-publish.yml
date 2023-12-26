@@ -2,8 +2,8 @@ name: Publish Release
 
 on:
   push:
-    branches:
-      - '*/prod'
+    tags:
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest

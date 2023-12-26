@@ -30,7 +30,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build with Gradle
-        run: ./gradlew publish --no-daemon
+        run: ./gradlew publishAllPublicationsToKkIncSnapshotsRepository --no-daemon
         env:
+          TCL_SNAPSHOT: true
           MAVEN_USER: ${{ secrets.MAVEN_USER }}
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}

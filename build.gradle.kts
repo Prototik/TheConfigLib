@@ -35,7 +35,7 @@ base {
     archivesName = "the-config-lib"
 }
 
-if ("GITHUB_ACTIONS" in System.getenv().keys) {
+if ("TCL_SNAPSHOT" in System.getenv().keys) {
     version = "$version-SNAPSHOT"
 }
 
