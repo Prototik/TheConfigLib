@@ -2,78 +2,30 @@
 
 # TheConfigLib
 
-![Enviroment](https://img.shields.io/badge/Enviroment-Client-purple)
-[![Java 17](https://img.shields.io/badge/Language-Java%2017-9B599A.svg?color=orange)](https://www.oracle.com/news/announcement/oracle-releases-java-17-2021-09-14)
+![Environment](https://img.shields.io/badge/Environment-Client-purple)
+![Java 17](https://img.shields.io/badge/Language-Java%2017-9B599A.svg?color=orange)
 
+[//]: # ([![Latest Release]&#40;https://maven.aur.rocks/api/badge/latest/releases/dev/tcl/the-config-lib-common?name=Release&#41;]&#40;https://maven.aur.rocks/#/releases/dev/tcl&#41;)
 [![Latest Snapshot](https://maven.aur.rocks/api/badge/latest/snapshots/dev/tcl/the-config-lib-common?name=Snapshot)](https://maven.aur.rocks/#/snapshots/dev/tcl)
 
-[//]: # ([![Modrinth]&#40;https://img.shields.io/modrinth/dt/1eAoo2KR?color=00AF5C&label=downloads&logo=modrinth&#41;]&#40;https://modrinth.com/mod/yacl&#41;)
-[//]: # ([![CurseForge]&#40;https://img.shields.io/curseforge/dt/667299?logo=curseforge&color=E04E14&#41;]&#40;https://curseforge.com/minecraft/mc-mods/yacl&#41;)
+[![Modrinth](https://img.shields.io/modrinth/dt/Q5Ti7TVC?color=00AF5C&label=downloads&logo=modrinth)][Modrinth]
+[![CurseForge](https://img.shields.io/curseforge/dt/954652?logo=curseforge&color=E04E14)][CurseForge]
 
 The Config Lib, one and only config library for your mods!
 
 </div></center>
 
-## Development environment setup
+## What is TCL?
+TheConfigLib (TCL) is a library mod to allow other mods create and use configs and build GUIs for them. 
+On its own it does nothing, you need other mod to utilize TCL API.
 
-Below described artifacts provide in this maven repository:
-
-### Gradle Groovy
-```groovy
-maven {
-    name "kkIncReleases"
-    url "https://maven.aur.rocks/releases"
-    mavenContent {
-        releasesOnly()
-    }
-}
-maven {
-    name "kkIncSnapshots"
-    url "https://maven.aur.rocks/snapshots"
-    mavenContent {
-        snapshotsOnly()
-    }
-}
-```
-
-### Gradle Kotlin
-```kotlin
-maven("https://maven.aur.rocks/releases") {
-    name = "kkIncReleases"
-    mavenContent {
-        releasesOnly()
-    }
-}
-maven("https://maven.aur.rocks/snapshots") {
-    name = "kkIncSnapshots"
-    mavenContent {
-        snapshotsOnly()
-    }
-}
-```
-
-### Architectury Loom / Fabric Loom
-
-#### Common API
-```kotlin
-modCompileOnlyApi("dev.tcl:the-config-lib-common:$tcl_version")
-```
-
-#### Fabric
-```kotlin
-modImplementation("dev.tcl:the-config-lib-fabric:$tcl_version")
-```
-
-#### Forge
-```kotlin
-modImplementation("dev.tcl:the-config-lib-forge:$tcl_version")
-```
-
-#### NeoForge
-```kotlin
-modImplementation("dev.tcl:the-config-lib-neoforge:$tcl_version")
-```
+It was created as fork of [YACL] to address API and compatibility issues.
 
 ## License
 
-This mod is under the [GNU Lesser General Public License, v3.0](LICENSE).
+This mod is under the [GNU Lesser General Public License, v3.0][LICENSE].
+
+[LICENSE]: LICENSE
+[Modrinth]: https://modrinth.com/mod/tcl
+[CurseForge]: https://curseforge.com/minecraft/mc-mods/tcl
+[YACL]: https://github.com/isXander/YetAnotherConfigLib
